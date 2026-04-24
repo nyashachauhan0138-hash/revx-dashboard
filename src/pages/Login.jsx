@@ -17,6 +17,7 @@ export default function Login() {
       const res = await API.post('/auth/login', form);
       login(res.data.user, res.data.token);
       toast.success('Welcome back!');
+
       // Redirect based on role
       if (res.data.user.role === 'admin') {
         navigate('/admin');
@@ -49,6 +50,7 @@ export default function Login() {
               required
             />
           </div>
+
           <div style={styles.field}>
             <label style={styles.label}>Password</label>
             <input
@@ -60,6 +62,14 @@ export default function Login() {
               required
             />
           </div>
+
+          {/* 🔐 Forgot Password Link (NEW) */}
+          <div style={{ textAlign: 'right', marginTop: '-10px' }}>
+            <Link to="/forgot-password" style={{ fontSize: '13px', color: '#f97316', textDecoration: 'none' }}>
+              Forgot Password?
+            </Link>
+          </div>
+
           <button style={styles.btn} type="submit" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>

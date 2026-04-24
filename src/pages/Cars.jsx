@@ -12,15 +12,19 @@ export default function Cars() {
   const [bookingCar, setBookingCar] = useState(null);
   const [form, setForm] = useState({ start_date: '', end_date: '', points_to_redeem: 0 });
 
+  const today = new Date().toISOString().split('T')[0];
+  const sixMonthsLater = new Date(new Date().setMonth(new Date().getMonth() + 6))
+    .toISOString().split('T')[0];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [carsRes, customerRes] = await Promise.all([
+        const [carsRes, loyaltyRes] = await Promise.all([
           API.get('/cars/available'),
-          API.get(`/customers/${user.customer_id}`),
+          API.get(`/customers/${user.customer_id}/loyalty`),
         ]);
         setCars(carsRes.data);
-        setLoyalty({ points: customerRes.data.loyalty_points });
+        setLoyalty({ points: loyaltyRes.data.loyalty_points });
       } catch {
         toast.error('Failed to load data');
       } finally {
@@ -117,7 +121,9 @@ export default function Cars() {
                     type="date"
                     style={inputStyle}
                     value={form.start_date}
-                    onChange={e => setForm({ ...form, start_date: e.target.value })}
+                    min={today}
+                    max={sixMonthsLater}
+                    onChange={e => setForm({ ...form, start_date: e.target.value, end_date: '' })}
                   />
                 </div>
                 <div>
@@ -126,6 +132,13 @@ export default function Cars() {
                     type="date"
                     style={inputStyle}
                     value={form.end_date}
+                    min={form.start_date || today}
+                    max={
+                      form.start_date
+                        ? new Date(new Date(form.start_date).setDate(new Date(form.start_date).getDate() + 30))
+                            .toISOString().split('T')[0]
+                        : sixMonthsLater
+                    }
                     onChange={e => setForm({ ...form, end_date: e.target.value })}
                   />
                 </div>

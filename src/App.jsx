@@ -9,6 +9,8 @@ import Cars from './pages/Cars';
 import MyRentals from './pages/MyRentals';
 import AdminDashboard from './pages/AdminDashboard';
 import ManageRentals from './pages/ManageRentals';
+import ForgotPassword from './pages/ForgotPassword'; // ✅ NEW
+
 
 // Blocks a page if user is not logged in
 const ProtectedRoute = ({ children, adminOnly = false }) => {
@@ -24,9 +26,13 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
+
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          {/* 🔐 Forgot Password (NEW) */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           {/* Customer routes */}
           <Route path="/dashboard" element={
@@ -49,6 +55,7 @@ function App() {
 
           {/* Default redirect */}
           <Route path="*" element={<Navigate to="/login" />} />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
